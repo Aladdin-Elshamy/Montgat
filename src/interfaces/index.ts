@@ -14,7 +14,7 @@ export interface IProduct {
 export interface IFormData {
     id: string,
     label: string,
-    name: string,
+    name: "title" | "description" | "price" | "imageURL",
     type: string,
 }
 
