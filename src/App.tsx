@@ -1,16 +1,34 @@
 import './index.css'
 import { productsList, formData } from './data'
-import { useState } from 'react'
+import { useState, ChangeEvent, FormEvent } from 'react'
 import ProductCard from './components/ProductCard'
 import Button from './components/ui/Button'
 import Modal from './components/ui/Modal'
 import Input from './components/ui/Input'
-console.log(productsList)
+import { IProduct } from './interfaces'
+import { validateProduct } from './components/validation'
+import ErrorMessage from './components/ErrorMessage'
 function App() {
+  /* -------------------------------- Variables ------------------------------- */
+  const defaultProductObj = {
+    title:"",
+    description:"",
+    price:"",
+    imageURL:"",
+    colors:[],
+    category:{name:"",imageURL:""}
+  }
   /* --------------------------------- States --------------------------------- */
   const [products, setProducts] = useState(productsList)
+  const [product, setProduct] = useState<IProduct>(defaultProductObj)
+  const [errors,setErrors] = useState({
+    title:"",
+    description:"",
+    price:"",
+    imageURL:""
+  })
   const [isOpen, setIsOpen] = useState(false)
-
+  console.log(errors)
   /* --------------------------------- Handlers ------------------------------- */
   function open() {
     setIsOpen(true)
@@ -19,15 +37,42 @@ function App() {
   function close() {
     setIsOpen(false)
   }
+  function closeHandler() {
+    setProduct(defaultProductObj)
+    setErrors({
+      title:"",
+      description:"",
+      price:"",
+      imageURL:""
+    })
+    close()
+  }
+  function changeHandler(e:ChangeEvent<HTMLInputElement>) {
+    const {name,value} = e.target
+    setProduct({...product,[name]:value})
+    setErrors({...errors,[name]:""})
+  }
+  function submitHandler(e:FormEvent<HTMLFormElement>){
+    e.preventDefault()
+    const{title,description,price,imageURL} = product
+    const error = validateProduct({title,description,price,imageURL})
+    const hasErrorMsg = Object.values(error).some(value => value !== "")
+    if(hasErrorMsg){
+      setErrors(error)
+      return
+    }
+    closeHandler()
+  }
   /* --------------------------------- Renders -------------------------------- */
   const renderProducts = () => {
     return products.map(product => <ProductCard key={product.id} product={product} />)
   }
   const renderFormInputs = () => {
     return formData.map(input => (
-      <div className='flex flex-col'>
-        <label htmlFor={input.id}>{input.label}</label>
-        <Input id={input.id} type={input.type} name={input.name} className='p-2 rounded-md focus:outline-none border-[1px] border-gray-300 focus:border-indigo-800 focus:ring-2 fous:ring-indigo-800 shadow-md' />
+      <div className='flex flex-col' key={input.id}>
+        <label htmlFor={input.id} className='font-semibold text-gray-700'>{input.label}</label>
+        <Input id={input.id} type={input.type} name={input.name} className='p-2 rounded-md focus:outline-none border-[1px] border-gray-300 focus:border-indigo-800 focus:ring-2 fous:ring-indigo-800 shadow-md' onChange={changeHandler} value={product[input.name]} />
+        <ErrorMessage msg={errors[input.name]} />
       </div>
     ))
   }
@@ -42,11 +87,11 @@ function App() {
       </div>
       <div>
         <Modal title='Add Product' isOpen={isOpen} close={close}>
-          <form action="" onSubmit={e => e.preventDefault()} className='flex flex-col gap-4'>
+          <form action="" onSubmit={submitHandler} className='flex flex-col gap-4'>
             {renderFormInputs()}
             <div className='flex gap-4'>
               <Button className='bg-indigo-800'>Add</Button>
-              <Button className='bg-gray-500' onClick={close}>Cancel</Button>
+              <Button className='bg-gray-500' onClick={closeHandler}>Cancel</Button>
             </div>
           </form>
         </Modal>

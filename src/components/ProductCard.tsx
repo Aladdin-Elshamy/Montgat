@@ -7,7 +7,6 @@ interface IProps {
     product: IProduct
 }
 export default function ProductCard({product}:IProps) {
-    console.log(product)
     return (
         <div className="border-2 rounded-lg">
             <div className="p-2 flex flex-col gap-4">
