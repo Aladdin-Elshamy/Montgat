@@ -57,7 +57,7 @@ export const formData: IFormData[] = [
     id: "price",
     label: "Product price",
     name: "price",
-    type: "number",
+    type: "string",
   }
 ]
 
