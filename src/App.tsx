@@ -1,5 +1,5 @@
 import './index.css'
-import { productsList, formData } from './data'
+import { productsList, formData, colors } from './data'
 import { useState, ChangeEvent, FormEvent } from 'react'
 import ProductCard from './components/ProductCard'
 import Button from './components/ui/Button'
@@ -8,6 +8,7 @@ import Input from './components/ui/Input'
 import { IProduct } from './interfaces'
 import { validateProduct } from './components/validation'
 import ErrorMessage from './components/ErrorMessage'
+import Color from './components/ui/Color'
 function App() {
   /* -------------------------------- Variables ------------------------------- */
   const defaultProductObj = {
@@ -27,8 +28,9 @@ function App() {
     price:"",
     imageURL:""
   })
+  const [tempColors,setTempColors] = useState<string[]>([])
   const [isOpen, setIsOpen] = useState(false)
-  console.log(errors)
+  console.log(tempColors)
   /* --------------------------------- Handlers ------------------------------- */
   function open() {
     setIsOpen(true)
@@ -38,13 +40,13 @@ function App() {
     setIsOpen(false)
   }
   function closeHandler() {
-    setProduct(defaultProductObj)
     setErrors({
       title:"",
       description:"",
       price:"",
       imageURL:""
     })
+    setProduct(defaultProductObj)
     close()
   }
   function changeHandler(e:ChangeEvent<HTMLInputElement>) {
@@ -76,6 +78,9 @@ function App() {
       </div>
     ))
   }
+  const renderProductColors = () => {
+    return colors.map(color => <Color color={color} key={color} onClick={() => setTempColors(prev => [...prev,color])} />)
+  }
   return (
     <main className='container my-10'>
       <div className='flex justify-between mb-4'>
@@ -89,9 +94,12 @@ function App() {
         <Modal title='Add Product' isOpen={isOpen} close={close}>
           <form action="" onSubmit={submitHandler} className='flex flex-col gap-4'>
             {renderFormInputs()}
+            <div className='flex gap-2 flex-wrap'>
+              {renderProductColors()}
+            </div>
             <div className='flex gap-4'>
               <Button className='bg-indigo-800'>Add</Button>
-              <Button className='bg-gray-500' onClick={closeHandler}>Cancel</Button>
+              <Button className='bg-gray-500' onClick={closeHandler} type='button'>Cancel</Button>
             </div>
           </form>
         </Modal>
