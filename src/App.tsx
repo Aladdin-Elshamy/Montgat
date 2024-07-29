@@ -1,4 +1,5 @@
 import './index.css'
+import { faker } from "@faker-js/faker";
 import { productsList, formData, colors } from './data'
 import { useState, ChangeEvent, FormEvent } from 'react'
 import ProductCard from './components/ProductCard'
@@ -20,13 +21,14 @@ function App() {
     category:{name:"",imageURL:""}
   }
   /* --------------------------------- States --------------------------------- */
-  const [products, setProducts] = useState(productsList)
+  const [products, setProducts] = useState<IProduct[]>(productsList)
   const [product, setProduct] = useState<IProduct>(defaultProductObj)
   const [errors,setErrors] = useState({
     title:"",
     description:"",
     price:"",
-    imageURL:""
+    imageURL:"",
+    colors:""
   })
   const [tempColors,setTempColors] = useState<string[]>([])
   const [isOpen, setIsOpen] = useState(false)
@@ -44,7 +46,8 @@ function App() {
       title:"",
       description:"",
       price:"",
-      imageURL:""
+      imageURL:"",
+      colors:""
     })
     setProduct(defaultProductObj)
     close()
@@ -57,12 +60,15 @@ function App() {
   function submitHandler(e:FormEvent<HTMLFormElement>){
     e.preventDefault()
     const{title,description,price,imageURL} = product
-    const error = validateProduct({title,description,price,imageURL})
+    const error = validateProduct({title,description,price,imageURL,colors:tempColors})
     const hasErrorMsg = Object.values(error).some(value => value !== "")
     if(hasErrorMsg){
       setErrors(error)
       return
     }
+    setProducts(prev => [{...product,id:faker.string.uuid(),colors:tempColors},...prev])
+    setTempColors([])
+    setProduct(defaultProductObj)
     closeHandler()
   }
   /* --------------------------------- Renders -------------------------------- */
@@ -79,7 +85,21 @@ function App() {
     ))
   }
   const renderProductColors = () => {
-    return colors.map(color => <Color color={color} key={color} onClick={() => setTempColors(prev => [...prev,color])} />)
+    return colors.map(color => (
+        <Color color={color} key={color} onClick={() => {
+          if(errors.colors){
+            setErrors(prev => ({...prev,colors:""}))
+          }
+          if(tempColors.includes(color)){
+            setTempColors(prev => prev.filter(c => c !== color))
+            return
+          }
+          setTempColors(prev => [...prev,color])
+        }} />
+    ))
+  }
+  const renderTempColors = () => {
+    return tempColors.map(color => <span key={color} className='text-white text-sm font-bold py-1 px-2 rounded-md ' style={{backgroundColor:color,textShadow:"0px 0px 1px rgba(0,0,0,0.5)"}}>{color}</span>)
   }
   return (
     <main className='container my-10'>
@@ -96,6 +116,10 @@ function App() {
             {renderFormInputs()}
             <div className='flex gap-2 flex-wrap'>
               {renderProductColors()}
+            </div>
+            <div className='flex gap-2 flex-wrap'>
+              {renderTempColors()}
+              <ErrorMessage msg={errors.colors} />
             </div>
             <div className='flex gap-4'>
               <Button className='bg-indigo-800'>Add</Button>

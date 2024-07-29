@@ -1,9 +1,10 @@
-export function validateProduct(product:{title:string,description:string,price:string,imageURL:string}) {
+export function validateProduct(product:{title:string,description:string,price:string,imageURL:string,colors:string[]}) {
     const error = {
         title:"",
         description:"",
         price:"",
-        imageURL:""
+        imageURL:"",
+        colors:""
     }
     const validateURL = /\b(?:https?|ftp):\/\/(?:www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&//=]*)\b/.test(product.imageURL)
     if(!product.title.trim() || product.title.length < 5 || product.title.length > 50) {
@@ -17,6 +18,9 @@ export function validateProduct(product:{title:string,description:string,price:s
     }
     if(!product.imageURL.trim() || !validateURL) {
         error.imageURL = "Valid image URL is required"
+    }
+    if(product.colors.length === 0) {
+        error.colors = "At least one color is required"
     }
     return error
 }
