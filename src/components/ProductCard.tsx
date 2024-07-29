@@ -20,7 +20,7 @@ export default function ProductCard({product}:IProps) {
                 <p className="text-gray-900">{textSlicer(product.description,90)}</p>
                 <div className="flex justify-between">
                     <p className="text-indigo-800 text-xl font-bold">${product.price}</p>
-                    <Image src={product.imageURL} className="w-10 h-10 object-cover rounded-full" alt={product.title} />
+                    <Image src={product.category.imageURL} className="w-10 h-10 object-cover rounded-full" alt={product.title} />
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {renderProductColors()}

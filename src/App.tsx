@@ -1,6 +1,6 @@
 import './index.css'
 import { faker } from "@faker-js/faker";
-import { productsList, formData, colors } from './data'
+import { productsList, formData, colors, categories } from './data'
 import { useState, ChangeEvent, FormEvent } from 'react'
 import ProductCard from './components/ProductCard'
 import Button from './components/ui/Button'
@@ -10,6 +10,7 @@ import { IProduct } from './interfaces'
 import { validateProduct } from './components/validation'
 import ErrorMessage from './components/ErrorMessage'
 import Color from './components/ui/Color'
+import Select from './components/ui/Select';
 function App() {
   /* -------------------------------- Variables ------------------------------- */
   const defaultProductObj = {
@@ -30,6 +31,7 @@ function App() {
     imageURL:"",
     colors:""
   })
+  const [selectedCategory, setSelectedCategory] = useState(categories[0])
   const [tempColors,setTempColors] = useState<string[]>([])
   const [isOpen, setIsOpen] = useState(false)
   console.log(tempColors)
@@ -66,7 +68,7 @@ function App() {
       setErrors(error)
       return
     }
-    setProducts(prev => [{...product,id:faker.string.uuid(),colors:tempColors},...prev])
+    setProducts(prev => [{...product,id:faker.string.uuid(),colors:tempColors,category:selectedCategory},...prev])
     setTempColors([])
     setProduct(defaultProductObj)
     closeHandler()
@@ -114,6 +116,7 @@ function App() {
         <Modal title='Add Product' isOpen={isOpen} close={close}>
           <form action="" onSubmit={submitHandler} className='flex flex-col gap-4'>
             {renderFormInputs()}
+            <Select selected={selectedCategory} setSelected={setSelectedCategory} />
             <div className='flex gap-2 flex-wrap'>
               {renderProductColors()}
             </div>
