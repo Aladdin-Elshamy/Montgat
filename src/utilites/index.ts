@@ -59,3 +59,8 @@ export function generateRandomUniqueColors(maxElements: number): string[] {
   
     return uniqueColors;
 }
+
+
+export function commaAdder(num: number) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
