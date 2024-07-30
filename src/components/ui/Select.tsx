@@ -7,7 +7,7 @@ import { ICategory } from '../../interfaces'
 
 
 interface IProps{
-    selected:ICategory
+    selected:{name:string,imageURL:string},
     setSelected: (value:ICategory) => void
 }
 export default function Select({selected,setSelected}:IProps) {

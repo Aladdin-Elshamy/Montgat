@@ -44,16 +44,6 @@ function App() {
   }
 
   function close() {
-    setIsOpen(false)
-  }
-  function openEditModal() {
-    setIsOpenEditModal(true)
-  }
-
-  function closeEditModal() {
-    setIsOpenEditModal(false)
-  }
-  function closeHandler() {
     setErrors({
       title:"",
       description:"",
@@ -62,7 +52,22 @@ function App() {
       colors:""
     })
     setProduct(defaultProductObj)
-    close()
+    setIsOpen(false)
+  }
+  function openEditModal() {
+    setIsOpenEditModal(true)
+  }
+
+  function closeEditModal() {
+    setErrors({
+      title:"",
+      description:"",
+      price:"",
+      imageURL:"",
+      colors:""
+    })
+    setProductToEdit(defaultProductObj)
+    setIsOpenEditModal(false)
   }
   function changeHandler(e:ChangeEvent<HTMLInputElement>) {
     const {name,value} = e.target
@@ -86,7 +91,7 @@ function App() {
     setProducts(prev => [{...product,id:faker.string.uuid(),colors:tempColors,category:selectedCategory},...prev])
     setTempColors([])
     setProduct(defaultProductObj)
-    closeHandler()
+    close()
   }
   function submitHandlerEditModal(e:FormEvent<HTMLFormElement>){
     e.preventDefault()
@@ -147,10 +152,10 @@ function App() {
           }
           if(productToEdit.colors.includes(color)){
             const newColors = productToEdit.colors.filter(item => color !== item)
-            setProductToEdit({...productToEdit,colors:newColors})
+            setProductToEdit(prev => ({...prev,colors:newColors}))
             return
           }
-          setProductToEdit({...productToEdit,colors:[...productToEdit.colors,color]})
+          setProductToEdit(prev => ({...prev,colors:[...productToEdit.colors,color]}))
         }} />
     ))
   }
@@ -164,7 +169,7 @@ function App() {
     <main className='container my-10'>
       <div className='flex justify-between mb-4'>
         <h1 className='text-5xl font-bold'>Latest <span className='text-indigo-800'>Products</span></h1>
-        <Button className='bg-indigo-800 px-5 py-4 text-md' width='w-fit' onClick={open}>Add Product</Button>
+        <Button className='bg-indigo-800 hover:bg-indigo-700 px-5 py-4 text-md' width='w-fit' onClick={open}>Add Product</Button>
       </div>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4'>
         {renderProducts()}
@@ -183,8 +188,8 @@ function App() {
               <ErrorMessage msg={errors.colors} />
             </div>
             <div className='flex gap-4'>
-              <Button className='bg-indigo-800'>Add</Button>
-              <Button className='bg-gray-500' onClick={closeHandler} type='button'>Cancel</Button>
+              <Button className='bg-indigo-800 hover:bg-indigo-700'>Add</Button>
+              <Button className='bg-gray-500 hover:bg-gray-400' onClick={close} type='button'>Cancel</Button>
             </div>
           </form>
         </Modal>
@@ -192,7 +197,7 @@ function App() {
         <Modal title='Edit Product' isOpen={isOpenEditModal} close={closeEditModal}>
           <form action="" onSubmit={submitHandlerEditModal} className='flex flex-col gap-4'>
             {renderFormInputsEditModal()}
-            <Select selected={selectedCategory} setSelected={setSelectedCategory} />
+            <Select selected={productToEdit.category} setSelected={value => setProductToEdit(prev => ({...prev,category:value}))} />
             <div className='flex gap-2 flex-wrap'>
               {renderProductColorsToEdit()}
             </div>
@@ -201,8 +206,8 @@ function App() {
               <ErrorMessage msg={errors.colors} />
             </div>
             <div className='flex gap-4'>
-              <Button className='bg-indigo-800'>Add</Button>
-              <Button className='bg-gray-500' onClick={closeEditModal} type='button'>Cancel</Button>
+              <Button className='bg-indigo-800 hover:bg-indigo-700'>Save</Button>
+              <Button className='bg-gray-500 hover:bg-gray-400' onClick={closeEditModal} type='button'>Cancel</Button>
             </div>
           </form>
         </Modal>
