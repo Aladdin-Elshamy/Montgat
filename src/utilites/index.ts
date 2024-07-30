@@ -20,7 +20,7 @@ export function textSlicer(text : string,limit = 50) : string {
  * @param {number} index - The index to calculate the image index for.
  * @return {number} The calculated image index.
  */
-export function categoryImgIndex(index:number){
+export function categoryImgIndex(index:number): number{
     console.log(index)
     let imgIndex = 0
     if(index >= 5 && index < 7){
