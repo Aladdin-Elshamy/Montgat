@@ -14,6 +14,12 @@ export function textSlicer(text : string,limit = 50) : string {
     return text
 }
 
+/**
+ * Calculates the image index based on the given index.
+ *
+ * @param {number} index - The index to calculate the image index for.
+ * @return {number} The calculated image index.
+ */
 export function categoryImgIndex(index:number){
     console.log(index)
     let imgIndex = 0
@@ -32,6 +38,12 @@ export function categoryImgIndex(index:number){
     return imgIndex
 }
 
+/**
+ * Generates an array of unique random colors.
+ *
+ * @param {number} maxElements - The maximum number of elements in the generated array.
+ * @return {string[]} An array of unique random colors.
+ */
 export function generateRandomUniqueColors(maxElements: number): string[] {
     const uniqueColors: string[] = [];
     const colorsLength = colors.length;
