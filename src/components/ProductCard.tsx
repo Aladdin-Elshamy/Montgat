@@ -6,8 +6,16 @@ import Image from "./ui/Image"
 
 interface IProps {
     product: IProduct
+    setProductToEdit:(product:IProduct) => void
+    openEditModal: () => void
 }
-export default function ProductCard({product}:IProps) {
+export default function ProductCard({product,setProductToEdit,openEditModal}:IProps) {
+
+    /* -------------------------------- Handlers -------------------------------- */
+    function Edit(){
+        openEditModal()
+        setProductToEdit(product)
+    }
     /* --------------------------------- Renders -------------------------------- */
     const renderProductColors = () => {
         return product.colors.map(color => <Color color={color} key={color} />)
@@ -26,7 +34,7 @@ export default function ProductCard({product}:IProps) {
                     {renderProductColors()}
                 </div>
                 <div className="flex gap-2">
-                    <Button className="bg-indigo-800">Edit</Button>
+                    <Button className="bg-indigo-800" onClick={Edit}>Edit</Button>
                     <Button className="bg-red-700">Remove</Button>
                 </div>
             </div>

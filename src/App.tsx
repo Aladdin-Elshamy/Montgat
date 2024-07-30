@@ -24,6 +24,7 @@ function App() {
   /* --------------------------------- States --------------------------------- */
   const [products, setProducts] = useState<IProduct[]>(productsList)
   const [product, setProduct] = useState<IProduct>(defaultProductObj)
+  const [productToEdit, setProductToEdit] = useState<IProduct>(defaultProductObj)
   const [errors,setErrors] = useState({
     title:"",
     description:"",
@@ -34,7 +35,8 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState(categories[0])
   const [tempColors,setTempColors] = useState<string[]>([])
   const [isOpen, setIsOpen] = useState(false)
-  console.log(tempColors)
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false)
+  console.log(productToEdit)
   /* --------------------------------- Handlers ------------------------------- */
   function open() {
     setIsOpen(true)
@@ -42,6 +44,13 @@ function App() {
 
   function close() {
     setIsOpen(false)
+  }
+  function openEditModal() {
+    setIsOpenEditModal(true)
+  }
+
+  function closeEditModal() {
+    setIsOpenEditModal(false)
   }
   function closeHandler() {
     setErrors({
@@ -59,6 +68,11 @@ function App() {
     setProduct({...product,[name]:value})
     setErrors({...errors,[name]:""})
   }
+  function changeHandlerEditModal(e:ChangeEvent<HTMLInputElement>) {
+    const {name,value} = e.target
+    setProductToEdit({...productToEdit,[name]:value})
+    setErrors({...errors,[name]:""})
+  }
   function submitHandler(e:FormEvent<HTMLFormElement>){
     e.preventDefault()
     const{title,description,price,imageURL} = product
@@ -73,15 +87,37 @@ function App() {
     setProduct(defaultProductObj)
     closeHandler()
   }
+  function submitHandlerEditModal(e:FormEvent<HTMLFormElement>){
+    e.preventDefault()
+    const{title,description,price,imageURL} = productToEdit
+    const error = validateProduct({title,description,price,imageURL,colors:tempColors})
+    const hasErrorMsg = Object.values(error).some(value => value !== "")
+    if(hasErrorMsg){
+      setErrors(error)
+      return
+    }
+    setTempColors([])
+    setProductToEdit(defaultProductObj)
+    closeHandler()
+  }
   /* --------------------------------- Renders -------------------------------- */
   const renderProducts = () => {
-    return products.map(product => <ProductCard key={product.id} product={product} />)
+    return products.map(product => <ProductCard key={product.id} product={product} setProductToEdit={setProductToEdit} openEditModal={openEditModal} />)
   }
   const renderFormInputs = () => {
     return formData.map(input => (
       <div className='flex flex-col' key={input.id}>
         <label htmlFor={input.id} className='font-semibold text-gray-700'>{input.label}</label>
         <Input id={input.id} type={input.type} name={input.name} className='p-2 rounded-md focus:outline-none border-[1px] border-gray-300 focus:border-indigo-800 focus:ring-2 fous:ring-indigo-800 shadow-md' onChange={changeHandler} value={product[input.name]} />
+        <ErrorMessage msg={errors[input.name]} />
+      </div>
+    ))
+  }
+  const renderFormInputsEditModal = () => {
+    return formData.map(input => (
+      <div className='flex flex-col' key={input.id}>
+        <label htmlFor={input.id} className='font-semibold text-gray-700'>{input.label}</label>
+        <Input id={input.id} type={input.type} name={input.name} className='p-2 rounded-md focus:outline-none border-[1px] border-gray-300 focus:border-indigo-800 focus:ring-2 fous:ring-indigo-800 shadow-md' onChange={changeHandlerEditModal} value={productToEdit[input.name]} />
         <ErrorMessage msg={errors[input.name]} />
       </div>
     ))
@@ -113,6 +149,7 @@ function App() {
         {renderProducts()}
       </div>
       <div>
+        {/* -------------------------------- Add Modal ------------------------------- */}
         <Modal title='Add Product' isOpen={isOpen} close={close}>
           <form action="" onSubmit={submitHandler} className='flex flex-col gap-4'>
             {renderFormInputs()}
@@ -127,6 +164,24 @@ function App() {
             <div className='flex gap-4'>
               <Button className='bg-indigo-800'>Add</Button>
               <Button className='bg-gray-500' onClick={closeHandler} type='button'>Cancel</Button>
+            </div>
+          </form>
+        </Modal>
+        {/* -------------------------------- Edit Modal ------------------------------- */}
+        <Modal title='Edit Product' isOpen={isOpenEditModal} close={closeEditModal}>
+          <form action="" onSubmit={submitHandlerEditModal} className='flex flex-col gap-4'>
+            {renderFormInputsEditModal()}
+            <Select selected={selectedCategory} setSelected={setSelectedCategory} />
+            <div className='flex gap-2 flex-wrap'>
+              {renderProductColors()}
+            </div>
+            <div className='flex gap-2 flex-wrap'>
+              {renderTempColors()}
+              <ErrorMessage msg={errors.colors} />
+            </div>
+            <div className='flex gap-4'>
+              <Button className='bg-indigo-800'>Add</Button>
+              <Button className='bg-gray-500' onClick={closeEditModal} type='button'>Cancel</Button>
             </div>
           </form>
         </Modal>
