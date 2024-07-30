@@ -7,14 +7,17 @@ import Image from "./ui/Image"
 interface IProps {
     product: IProduct
     setProductToEdit:(product:IProduct) => void
+    setProductIdxToEdit:(index:number) => void
     openEditModal: () => void
+    idx:number
 }
-export default function ProductCard({product,setProductToEdit,openEditModal}:IProps) {
+export default function ProductCard({product,setProductToEdit,openEditModal,setProductIdxToEdit,idx}:IProps) {
 
     /* -------------------------------- Handlers -------------------------------- */
     function Edit(){
         openEditModal()
         setProductToEdit(product)
+        setProductIdxToEdit(idx)
     }
     /* --------------------------------- Renders -------------------------------- */
     const renderProductColors = () => {

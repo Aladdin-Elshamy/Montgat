@@ -25,6 +25,7 @@ function App() {
   const [products, setProducts] = useState<IProduct[]>(productsList)
   const [product, setProduct] = useState<IProduct>(defaultProductObj)
   const [productToEdit, setProductToEdit] = useState<IProduct>(defaultProductObj)
+  const [productIdxToEdit,setProductIdxToEdit] = useState<number>(0)
   const [errors,setErrors] = useState({
     title:"",
     description:"",
@@ -90,19 +91,21 @@ function App() {
   function submitHandlerEditModal(e:FormEvent<HTMLFormElement>){
     e.preventDefault()
     const{title,description,price,imageURL} = productToEdit
-    const error = validateProduct({title,description,price,imageURL,colors:tempColors})
+    const error = validateProduct({title,description,price,imageURL,colors:productToEdit.colors})
     const hasErrorMsg = Object.values(error).some(value => value !== "")
     if(hasErrorMsg){
       setErrors(error)
       return
     }
-    setTempColors([])
+    const updatedProducts = [...products]
+    updatedProducts[productIdxToEdit] = productToEdit
+    setProducts(updatedProducts)
     setProductToEdit(defaultProductObj)
-    closeHandler()
+    closeEditModal()
   }
   /* --------------------------------- Renders -------------------------------- */
   const renderProducts = () => {
-    return products.map(product => <ProductCard key={product.id} product={product} setProductToEdit={setProductToEdit} openEditModal={openEditModal} />)
+    return products.map((product,index) => <ProductCard key={product.id} product={product} setProductToEdit={setProductToEdit} openEditModal={openEditModal} setProductIdxToEdit={setProductIdxToEdit} idx={index} />)
   }
   const renderFormInputs = () => {
     return formData.map(input => (
@@ -135,6 +138,24 @@ function App() {
           setTempColors(prev => [...prev,color])
         }} />
     ))
+  }
+  const renderProductColorsToEdit = () => {
+    return colors.map(color => (
+        <Color color={color} key={color} onClick={() => {
+          if(errors.colors){
+            setErrors(prev => ({...prev,colors:""}))
+          }
+          if(productToEdit.colors.includes(color)){
+            const newColors = productToEdit.colors.filter(item => color !== item)
+            setProductToEdit({...productToEdit,colors:newColors})
+            return
+          }
+          setProductToEdit({...productToEdit,colors:[...productToEdit.colors,color]})
+        }} />
+    ))
+  }
+  const renderNewProductColors = () => {
+    return productToEdit.colors.map(color => <span key={color} className='text-white text-sm font-bold py-1 px-2 rounded-md ' style={{backgroundColor:color,textShadow:"0px 0px 1px rgba(0,0,0,0.5)"}}>{color}</span>)
   }
   const renderTempColors = () => {
     return tempColors.map(color => <span key={color} className='text-white text-sm font-bold py-1 px-2 rounded-md ' style={{backgroundColor:color,textShadow:"0px 0px 1px rgba(0,0,0,0.5)"}}>{color}</span>)
@@ -173,10 +194,10 @@ function App() {
             {renderFormInputsEditModal()}
             <Select selected={selectedCategory} setSelected={setSelectedCategory} />
             <div className='flex gap-2 flex-wrap'>
-              {renderProductColors()}
+              {renderProductColorsToEdit()}
             </div>
             <div className='flex gap-2 flex-wrap'>
-              {renderTempColors()}
+              {renderNewProductColors()}
               <ErrorMessage msg={errors.colors} />
             </div>
             <div className='flex gap-4'>
