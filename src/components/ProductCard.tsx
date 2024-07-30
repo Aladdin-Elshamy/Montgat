@@ -9,15 +9,20 @@ interface IProps {
     setProductToEdit:(product:IProduct) => void
     setProductIdxToEdit:(index:number) => void
     openEditModal: () => void
+    openDeleteModal: () => void
     idx:number
 }
-export default function ProductCard({product,setProductToEdit,openEditModal,setProductIdxToEdit,idx}:IProps) {
+export default function ProductCard({product,setProductToEdit,openEditModal,openDeleteModal,setProductIdxToEdit,idx}:IProps) {
 
     /* -------------------------------- Handlers -------------------------------- */
-    function Edit(){
+    function editProduct(){
         openEditModal()
         setProductToEdit(product)
         setProductIdxToEdit(idx)
+    }
+    function removeProduct(){
+        setProductToEdit(product)
+        openDeleteModal()
     }
     /* --------------------------------- Renders -------------------------------- */
     const renderProductColors = () => {
@@ -40,8 +45,8 @@ export default function ProductCard({product,setProductToEdit,openEditModal,setP
                     {renderProductColors()}
                 </div>
                 <div className="flex gap-2">
-                    <Button className="bg-indigo-800 hover:bg-indigo-700" onClick={Edit}>Edit</Button>
-                    <Button className="bg-red-700 hover:bg-red-600">Remove</Button>
+                    <Button className="bg-indigo-800 hover:bg-indigo-700" onClick={editProduct}>Edit</Button>
+                    <Button className="bg-red-700 hover:bg-red-600" onClick={removeProduct}>Remove</Button>
                 </div>
             </div>
         </div>

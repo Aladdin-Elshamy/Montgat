@@ -3,11 +3,12 @@ import { ReactNode } from 'react'
 
 interface IProps{
   title?:string
+  description?:string
   isOpen:boolean
   close:() => void
   children:ReactNode
 }
-export default function Modal({title,isOpen,close,children}: IProps) {
+export default function Modal({title,description,isOpen,close,children}: IProps) {
 
 
   return (
@@ -23,6 +24,7 @@ export default function Modal({title,isOpen,close,children}: IProps) {
               {title && <DialogTitle as="h3" className="text-xl font-medium text-black">
                 {title}
               </DialogTitle>}
+              {description ? <p className="mt-4 text-gray-500">{description}</p> : null}
               <div className="mt-4">
                 {children}
               </div>

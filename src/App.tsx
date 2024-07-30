@@ -11,6 +11,7 @@ import { validateProduct } from './components/validation'
 import ErrorMessage from './components/ErrorMessage'
 import Color from './components/ui/Color'
 import Select from './components/ui/Select';
+import toast, { Toaster } from 'react-hot-toast';
 function App() {
   /* -------------------------------- Variables ------------------------------- */
   const defaultProductObj = {
@@ -37,6 +38,7 @@ function App() {
   const [tempColors,setTempColors] = useState<string[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
   console.log(productToEdit)
   /* --------------------------------- Handlers ------------------------------- */
   function open() {
@@ -69,6 +71,12 @@ function App() {
     setProductToEdit(defaultProductObj)
     setIsOpenEditModal(false)
   }
+  function openDeleteModal(){
+    setIsOpenDeleteModal(true)
+  }
+  function closeDeleteModal(){
+    setIsOpenDeleteModal(false)
+  }
   function changeHandler(e:ChangeEvent<HTMLInputElement>) {
     const {name,value} = e.target
     setProduct({...product,[name]:value})
@@ -92,6 +100,15 @@ function App() {
     setTempColors([])
     setProduct(defaultProductObj)
     close()
+    toast('Product has been added', {
+      icon: '✅',
+      position: 'top-center',
+      style: {
+        borderRadius: '10px',
+        background: '#23a96e',
+        color: '#fff',
+      }
+    })
   }
   function submitHandlerEditModal(e:FormEvent<HTMLFormElement>){
     e.preventDefault()
@@ -107,10 +124,34 @@ function App() {
     setProducts(updatedProducts)
     setProductToEdit(defaultProductObj)
     closeEditModal()
+    toast('Product has been updated', {
+      icon: '✏️',
+      position: 'top-center',
+      style: {
+        borderRadius: '10px',
+        background: '#3730a3',
+        color: '#fff',
+      }
+    })
+  }
+  function deleteProduct(){
+    let filteredProducts = [...products]
+    filteredProducts = products.filter(product => product.id !== productToEdit.id)
+    setProducts(filteredProducts)
+    closeDeleteModal()
+    toast('Product has been deleted', {
+      icon: '🗑️',
+      position: 'top-center',
+      style: {
+        borderRadius: '10px',
+        background: '#b81c1d',
+        color: '#fff',
+      }
+    })
   }
   /* --------------------------------- Renders -------------------------------- */
   const renderProducts = () => {
-    return products.map((product,index) => <ProductCard key={product.id} product={product} setProductToEdit={setProductToEdit} openEditModal={openEditModal} setProductIdxToEdit={setProductIdxToEdit} idx={index} />)
+    return products.map((product,index) => <ProductCard key={product.id} product={product} setProductToEdit={setProductToEdit} openEditModal={openEditModal} openDeleteModal={openDeleteModal} setProductIdxToEdit={setProductIdxToEdit} idx={index} />)
   }
   const renderFormInputs = () => {
     return formData.map(input => (
@@ -211,7 +252,15 @@ function App() {
             </div>
           </form>
         </Modal>
+        {/* -------------------------------- Delete Modal ------------------------------- */}
+        <Modal title='Delete Product' description='Deleting this product will remove it permanently from your inventory. Any data associated with this product will be lost, and other related data will also be deleted. Please confirm that you want to proceed.' isOpen={isOpenDeleteModal} close={closeDeleteModal}>
+            <div className='flex gap-4'>
+              <Button className='bg-red-700 hover:bg-red-600' onClick={deleteProduct}>Yes, I am sure</Button>
+              <Button className='bg-gray-500 hover:bg-gray-400' onClick={closeDeleteModal} type='button'>No</Button>
+            </div>
+        </Modal>
       </div>
+      <Toaster />
     </main>
   )
 }
