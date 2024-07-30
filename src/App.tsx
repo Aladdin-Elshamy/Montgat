@@ -207,9 +207,9 @@ function App() {
   }
   return (
     <main className='container my-10'>
-      <div className='flex justify-between mb-4'>
-        <h1 className='text-5xl font-bold'>Latest <span className='text-indigo-800'>Products</span></h1>
-        <Button className='bg-indigo-800 hover:bg-indigo-700 px-5 py-4 text-md' width='w-fit' onClick={open}>Add Product</Button>
+      <div className='flex justify-between items-center mb-4 gap-6'>
+        <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold'>Latest <span className='text-indigo-800'>Products</span></h1>
+        <Button className='bg-indigo-800 hover:bg-indigo-700 p-2 sm:px-4 sm:py-3 md:px-5 md:py-4' width='w-fit' onClick={open}>Add Product</Button>
       </div>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4'>
         {renderProducts()}
