@@ -39,7 +39,6 @@ function App() {
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
-  console.log(productToEdit)
   /* --------------------------------- Handlers ------------------------------- */
   function open() {
     setIsOpen(true)

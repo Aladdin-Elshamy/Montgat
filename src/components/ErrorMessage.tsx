@@ -1,5 +1,5 @@
 interface IProps {
-msg:string
+    msg:string
 }
 export default function ErrorMessage({msg}:IProps) {
     return (
