@@ -11,7 +11,6 @@
 - [Live Demo](#live-demo)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ## Features
@@ -86,10 +85,6 @@ Contributions are welcome! If you want to contribute to Montgat, please follow t
     git push origin feature/YourFeatureName
     ```
 7. **Open a Pull Request**: Navigate to the original repository and click 'New Pull Request'.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Contact
 
