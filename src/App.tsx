@@ -1,7 +1,7 @@
 import './index.css'
 import { faker } from "@faker-js/faker";
 import { productsList, formData, colors, categories } from './data'
-import { useState, ChangeEvent, FormEvent } from 'react'
+import { useState, ChangeEvent, FormEvent, useCallback } from 'react'
 import ProductCard from './components/ProductCard'
 import Button from './components/ui/Button'
 import Modal from './components/ui/Modal'
@@ -55,9 +55,9 @@ function App() {
     setProduct(defaultProductObj)
     setIsOpen(false)
   }
-  function openEditModal() {
+  const openEditModal = useCallback(() => {
     setIsOpenEditModal(true)
-  }
+  },[])
 
   function closeEditModal() {
     setErrors({
@@ -70,17 +70,17 @@ function App() {
     setProductToEdit(defaultProductObj)
     setIsOpenEditModal(false)
   }
-  function openDeleteModal(){
+  const openDeleteModal = useCallback(() => {
     setIsOpenDeleteModal(true)
-  }
+  }, [])
   function closeDeleteModal(){
     setIsOpenDeleteModal(false)
   }
-  function changeHandler(e:ChangeEvent<HTMLInputElement>) {
+  const changeHandler = useCallback((e:ChangeEvent<HTMLInputElement>) => {
     const {name,value} = e.target
-    setProduct({...product,[name]:value})
-    setErrors({...errors,[name]:""})
-  }
+    setProduct((prev) => ({...prev,[name]:value}))
+    setErrors((prev) => ({...prev,[name]:""}))
+  },[])
   function changeHandlerEditModal(e:ChangeEvent<HTMLInputElement>) {
     const {name,value} = e.target
     setProductToEdit({...productToEdit,[name]:value})

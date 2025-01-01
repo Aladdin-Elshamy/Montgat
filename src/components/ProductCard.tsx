@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { IProduct } from "../interfaces"
 import { commaAdder, textSlicer } from "../utilites"
 import Button from "./ui/Button"
@@ -12,7 +13,7 @@ interface IProps {
     openDeleteModal: () => void
     idx:number
 }
-export default function ProductCard({product,setProductToEdit,openEditModal,openDeleteModal,setProductIdxToEdit,idx}:IProps) {
+function ProductCard({product,setProductToEdit,openEditModal,openDeleteModal,setProductIdxToEdit,idx}:IProps) {
 
     /* -------------------------------- Handlers -------------------------------- */
     function editProduct(){
@@ -52,3 +53,4 @@ export default function ProductCard({product,setProductToEdit,openEditModal,open
         </div>
     )
 }
+export default memo(ProductCard)

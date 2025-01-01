@@ -4,13 +4,14 @@ import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@h
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { categories } from '../../data'
 import { ICategory } from '../../interfaces'
+import { memo } from 'react'
 
 
 interface IProps{
     selected:{name:string,imageURL:string},
     setSelected: (value:ICategory) => void
 }
-export default function Select({selected,setSelected}:IProps) {
+function Select({selected,setSelected}:IProps) {
     return (
     <Listbox value={selected} onChange={setSelected}>
         <Label className="block text-sm font-medium text-gray-900">Category</Label>
@@ -52,3 +53,4 @@ export default function Select({selected,setSelected}:IProps) {
     </Listbox>
     )
 }
+export default memo(Select)

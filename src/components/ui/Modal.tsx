@@ -1,5 +1,5 @@
 import { Dialog, DialogPanel, DialogTitle, DialogBackdrop } from '@headlessui/react'
-import { ReactNode } from 'react'
+import { memo, ReactNode } from 'react'
 
 interface IProps{
   title?:string
@@ -8,11 +8,10 @@ interface IProps{
   close:() => void
   children:ReactNode
 }
-export default function Modal({title,description,isOpen,close,children}: IProps) {
+function Modal({title,description,isOpen,close,children}: IProps) {
 
 
   return (
-    <>
       <Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none" onClose={close} __demoMode>
         <DialogBackdrop className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -32,6 +31,6 @@ export default function Modal({title,description,isOpen,close,children}: IProps)
           </div>
         </div>
       </Dialog>
-    </>
   )
 }
+export default memo(Modal)

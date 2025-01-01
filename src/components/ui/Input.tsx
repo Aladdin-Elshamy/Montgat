@@ -1,7 +1,9 @@
-import { InputHTMLAttributes } from "react"
+import { InputHTMLAttributes, memo } from "react"
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {}
-export default function Input({...rest}:IProps) {
+function Input({...rest}:IProps) {
     return (
         <input {...rest}/>
     )
 }
+
+export default memo(Input)
